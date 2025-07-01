@@ -177,7 +177,6 @@ def customs_bigdata_export_order_regions(matchKeyword: str, pageIndex: int = 1, 
     - matchKeyword: 匹配关键词 类型：string - 企业名称/注册号/统一社会信用代码/企业id，如果没有企业全称则先调取fuzzy_search接口获取企业全称。
 
     返回参数:
-    - resultList: 订单地区分布列表 类型：list of dict
     - amount: 金额 类型：float - 美元
     - count: 订单数 类型：int
     - destCountry: 国家/地区 类型：string
@@ -242,7 +241,6 @@ def customs_bigdata_fuzzy_search(matchKeyword: str, pageIndex: int = 1, pageSize
 
     返回参数:
     - total: 总数 类型：int
-    - resultList: 结果列表 类型：list of dict
     - annualTurnover: 年营业额 类型：string
     - formerNames: 曾用名 类型：list of string
     - address: 注册地址 类型：string
