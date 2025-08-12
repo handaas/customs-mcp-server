@@ -9,7 +9,7 @@ import sys
 
 load_dotenv()
 
-mcp = FastMCP("海关大数据", instructions="海关大数据",dependencies=["python-dotenv", "requests"])
+mcp = FastMCP("海关大数据", instructions="海关大数据", dependencies=["python-dotenv", "requests"])
 
 INTEGRATOR_ID = os.environ.get("INTEGRATOR_ID")
 SECRET_ID = os.environ.get("SECRET_ID")
@@ -80,9 +80,9 @@ def customs_bigdata_export_trends(matchKeyword: str, keywordType: str = None) ->
 
     返回参数:
     - exportTrend: 出口年份列表 类型：list of dict
-    - amount: 金额 类型：float - 美元
-    - count: 订单数量 类型：int
-    - year: 年份 类型：string
+        - amount: 金额 类型：float - 美元
+        - count: 订单数量 类型：int
+        - year: 年份 类型：string
     - total: 出口年份总数 类型：int
     """
     # 构建请求参数
@@ -110,16 +110,16 @@ def customs_bigdata_export_product_trends(matchKeyword: str, keywordType: str = 
 
     返回参数:
     - exportGoodsOrderDistribution: 出口商品订单量分布 类型：list of dict
-    - orderCountOfYear: 每年的订单量 类型：list of dict
-    - count: 数量 类型：int
-    - hsCode: 海关HS商品编码 类型：string
-    - count: 数量 类型：int
-    - hsCode: 海关HS商品编码 类型：string
-    - year: 年份 类型：int
+        - count: 数量 类型：int
+        - hsCode: 海关HS商品编码 类型：string
+        - orderCountOfYear: 每年的订单量 类型：list of dict
+            - count: 数量 类型：int
+            - hsCode: 海关HS商品编码 类型：string
+            - year: 年份 类型：int
     - exportGoodsOrderTrend: 出口商品订单量趋势 类型：list of dict
-    - year: 年份 类型：int
-    - count: 数量 类型：int
-    - name: 名称 类型：string
+        - year: 年份 类型：int
+        - count: 数量 类型：int
+        - name: 名称 类型：string
     """
     # 构建请求参数
     params = {
@@ -175,16 +175,17 @@ def customs_bigdata_export_order_regions(matchKeyword: str, pageIndex: int = 1, 
 
 
     请求参数:
-    - pageIndex: 页码 类型：int - 从1开始
+    - pageIndex: 页码 类型：int - 默认从1开始
     - pageSize: 分页大小 类型：int - 一页最多获取50条
     - keywordType: 主体类型 类型：select - 主体类型枚举（name：企业名称，nameId：企业id，regNumber：注册号，socialCreditCode：统一社会信用代码)
     - matchKeyword: 匹配关键词 类型：string - 企业名称/注册号/统一社会信用代码/企业id，如果没有企业全称则先调取fuzzy_search接口获取企业全称。
 
     返回参数:
-    - amount: 金额 类型：float - 美元
-    - count: 订单数 类型：int
-    - destCountry: 国家/地区 类型：string
-    - weight: 净重 类型：float - 千克
+    - resultList: 订单地区分布列表 类型：list of dict
+        - amount: 金额 类型：float - 美元
+        - count: 订单数 类型：int
+        - destCountry: 国家/地区 类型：string
+        - weight: 净重 类型：float - 千克
     - total: 分布地区总数 类型：int
     """
     # 构建请求参数
@@ -213,12 +214,12 @@ def customs_bigdata_overseas_certifications(matchKeyword: str, keywordType: str 
     - keywordType: 主体类型 类型：select - 主体类型枚举（name：企业名称，nameId：企业id，regNumber：注册号，socialCreditCode：统一社会信用代码）
 
     返回参数:
-    - certType: 认证类别 类型：string
-    - certId: 证书号 类型：string
-    - certCount: 总数 类型：int
-    - certDomain: 认证领域 类型：string
-    - certProductName: 产品名称 类型：string
     - certList: 结果列表 类型：list of dict
+        - certType: 认证类别 类型：string
+        - certId: 证书号 类型：string
+        - certDomain: 认证领域 类型：string
+        - certProductName: 产品名称 类型：string
+    - certCount: 总数 类型：int
     """
     # 构建请求参数
     params = {
@@ -234,49 +235,48 @@ def customs_bigdata_overseas_certifications(matchKeyword: str, keywordType: str 
 
 
 @mcp.tool()
-def customs_bigdata_fuzzy_search(matchKeyword: str, pageIndex: int = 1, pageSize: int = None) -> dict:
+def customs_bigdata_fuzzy_search(matchKeyword: str, pageIndex: int = 1, pageSize: int = 50) -> dict:
     """
     该接口的功能是根据提供的企业名称、人名、品牌、产品、岗位等关键词模糊查询相关企业列表。返回匹配的企业列表及其详细信息，用于查找和识别特定的企业信息。
 
     请求参数:
     - matchKeyword: 匹配关键词 类型：string - 查询各类信息包含匹配关键词的企业
-    - pageIndex: 分页开始位置 类型：int
-    - pageSize: 分页结束位置 类型：int - 一页最多获取50条数据
+    - pageIndex: 分页开始位置 类型：int - 默认从1开始
+    - pageSize: 分页结束位置 类型：int - 一页最多获取50条数据, 不能超过50, 超过50的统一用50代替
 
     返回参数:
     - total: 总数 类型：int
-    - annualTurnover: 年营业额 类型：string
-    - formerNames: 曾用名 类型：list of string
-    - address: 注册地址 类型：string
-    - foundTime: 成立时间 类型：string
-    - enterpriseType: 企业主体类型 类型：string
-    - legalRepresentative: 法定代表人 类型：string
-    - homepage: 企业官网 类型：string
-    - legalRepresentativeId: 法定代表人id 类型：string
-    - prmtKeys: 推广关键词 类型：list of string
-    - operStatus: 企业状态 类型：string
-    - logo: 企业logo 类型：string
-    - nameId: 企业id 类型：string
-    - regCapitalCoinType: 注册资本币种 类型：string
-    - regCapitalValue: 注册资本金额 类型：int
-    - name: 企业名称 类型：string
-    - catchReason: 命中原因 类型：dict
-    - catchReason.name: 企业名称 类型：list of string
-    - catchReason.formerNames: 曾用名 类型：list of string
-    - catchReason.holderList: 股东 类型：list of string
-    - catchReason.recruitingName: 招聘岗位 类型：list of string
-    - catchReason.address: 地址 类型：list of string
-    - catchReason.operBrandList: 品牌 类型：list of string
-    - catchReason.goodsNameList: 产品名称 类型：list of string
-    - catchReason.phoneList: 固话 类型：list of string
-    - catchReason.emailList: 邮箱 类型：list of string
-    - catchReason.mobileList: 手机 类型：list of string
-    - catchReason.patentNameList: 专利 类型：list of string
-    - catchReason.certNameList: 资质证书 类型：list of string
-    - catchReason.prmtKeys: 推广关键词 类型：list of string
-    - catchReason.socialCreditCode: 统一社会信用代码 类型：list of string
-
-
+    - resultList:查询返回企业信息列表 类型：list of dict:
+        - annualTurnover: 年营业额 类型：string
+        - formerNames: 曾用名 类型：list of string
+        - address: 注册地址 类型：string
+        - foundTime: 成立时间 类型：string
+        - enterpriseType: 企业主体类型 类型：string
+        - legalRepresentative: 法定代表人 类型：string
+        - legalRepresentativeId: 法定代表人id 类型：string
+        - homepage: 企业官网 类型：string
+        - prmtKeys: 推广关键词 类型：list of string
+        - operStatus: 企业状态 类型：string
+        - logo: 企业logo 类型：string
+        - nameId: 企业id 类型：string
+        - regCapitalCoinType: 注册资本币种 类型：string
+        - regCapitalValue: 注册资本金额 类型：int
+        - name: 企业名称 类型：string
+        - catchReason: 命中原因 类型：dict
+            - catchReason.name: 企业名称 类型：list of string
+            - catchReason.formerNames: 曾用名 类型：list of string
+            - catchReason.holderList: 股东 类型：list of string
+            - catchReason.recruitingName: 招聘岗位 类型：list of string
+            - catchReason.address: 地址 类型：list of string
+            - catchReason.operBrandList: 品牌 类型：list of string
+            - catchReason.goodsNameList: 产品名称 类型：list of string
+            - catchReason.phoneList: 固话 类型：list of string
+            - catchReason.emailList: 邮箱 类型：list of string
+            - catchReason.mobileList: 手机 类型：list of string
+            - catchReason.patentNameList: 专利 类型：list of string
+            - catchReason.certNameList: 资质证书 类型：list of string
+            - catchReason.prmtKeys: 推广关键词 类型：list of string
+            - catchReason.socialCreditCode: 统一社会信用代码 类型：list of string
     """
     # 构建请求参数
     params = {
