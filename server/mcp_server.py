@@ -9,7 +9,7 @@ import sys
 
 load_dotenv()
 
-mcp = FastMCP("海关大数据", instructions="海关大数据",dependencies=["python-dotenv", "requests"])
+mcp = FastMCP("海关贸易分析", instructions="海关贸易分析",dependencies=["python-dotenv", "requests"])
 
 INTEGRATOR_ID = os.environ.get("INTEGRATOR_ID")
 SECRET_ID = os.environ.get("SECRET_ID")
